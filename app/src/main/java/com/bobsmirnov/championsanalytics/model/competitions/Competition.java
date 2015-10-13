@@ -1,8 +1,9 @@
-package com.bobsmirnov.championsanalytics.competitions;
+package com.bobsmirnov.championsanalytics.model.competitions;
 
 /**
- * Created by bobsmirnov on 31.07.15.
+ * Created by bobsmirnov on 31.07.15
  */
+
 public abstract class Competition {
 
     public String viewName;

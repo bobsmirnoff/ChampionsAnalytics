@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.IOException;
+import java.util.TreeMap;
+
 public class DBWorker {
 
     private final Context context;
@@ -15,8 +18,10 @@ public class DBWorker {
         context = cxt;
     }
 
-    public void open() {
+    public void open() throws IOException {
         helper = new DBHelper(context, DBHelper.DB_NAME, null, DBHelper.DB_VERSION);
+        helper.createDataBase();
+        helper.openDataBase();
         db = helper.getWritableDatabase();
     }
 
@@ -24,15 +29,32 @@ public class DBWorker {
         if (helper != null) helper.close();
     }
 
-    public Cursor getAllClubs() {
-        return db.query(DBHelper.CLUBS_TABLE, null, null, null, null, null, DBHelper.CLUB_NAME + " ASC");
+
+    //---------------------- clubs table methods -----------------------------------
+
+    public TreeMap<String, Long> getAllClubsNames() {
+        final Cursor cursor = db.query(DBHelper.CLUBS_TABLE,
+                new String[]{DBHelper.CLUB_NAME, DBHelper.CLUB_ID},
+                null, null, null, null,
+                DBHelper.CLUB_NAME + " ASC");
+        final TreeMap<String, Long> map = new TreeMap<>();
+        if (cursor == null) return null;
+        if (cursor.moveToFirst()) {
+            do {
+                map.put(cursor.getString(cursor.getColumnIndex(DBHelper.CLUB_NAME)),
+                        cursor.getLong(cursor.getColumnIndex(DBHelper.CLUB_ID)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return map;
     }
 
     public Cursor getClubById(long clubId) {
         return db.query(DBHelper.CLUBS_TABLE,
                 null,
-                DBHelper.CLUB_ID + " = " + clubId,
-                null, null, null, null);
+                DBHelper.CLUB_ID + " = ?",
+                new String[]{"" + clubId},
+                null, null, null);
     }
 
     public int getNationalCups(long clubId) {
@@ -73,8 +95,9 @@ public class DBWorker {
     public Cursor getLegendsForClub(long clubId) {
         return db.query(DBHelper.LEGENDS_TABLE,
                 null,
-                DBHelper.LEGEND_CLUB_PLAYED + " = " + clubId,
-                null, null, null, null);
+                DBHelper.LEGEND_CLUB_PLAYED + " = ?",
+                new String[]{"" + clubId},
+                null, null, null);
     }
 
     public Cursor getAllLegends() {
@@ -82,19 +105,20 @@ public class DBWorker {
     }
 
     public void addLegend(long clubId, String legendName) {
-        //somehow db.insert does not work
         db.execSQL("INSERT INTO " + DBHelper.LEGENDS_TABLE + " ("
                 + DBHelper.LEGEND_CLUB_PLAYED + ", "
                 + DBHelper.LEGEND_NAME + ") " +
-                "VALUES ('" + clubId + "', '" + legendName + ")");
+                "VALUES ('" + clubId + "', '" + legendName + "')");
     }
 
     public String getNationalCupName(String nation) {
         String name = "";
-        final Cursor cursor = db.query(DBHelper.TROPHIES_TABLE,
+        final Cursor cursor = db.query(
+                DBHelper.TROPHIES_TABLE,
                 new String[]{DBHelper.NATIONAL_CUP_NAME},
-                DBHelper.NATION + " = " + nation,
-                null, null, null, null);
+                DBHelper.NATION + " = ?",
+                new String[]{nation},
+                null, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {

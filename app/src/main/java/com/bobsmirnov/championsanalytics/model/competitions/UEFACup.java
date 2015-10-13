@@ -1,4 +1,4 @@
-package com.bobsmirnov.championsanalytics.competitions;
+package com.bobsmirnov.championsanalytics.model.competitions;
 
 import com.bobsmirnov.championsanalytics.db.DBHelper;
 

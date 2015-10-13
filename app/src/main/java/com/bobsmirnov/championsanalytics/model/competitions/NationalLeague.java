@@ -1,10 +1,11 @@
-package com.bobsmirnov.championsanalytics.competitions;
+package com.bobsmirnov.championsanalytics.model.competitions;
 
 import com.bobsmirnov.championsanalytics.db.DBHelper;
 
 /**
- * Created by bobsmirnov on 31.07.15.
+ * Created by bobsmirnov on 31.07.15
  */
+
 public class NationalLeague extends Competition {
 
     public NationalLeague(String viewName) {
