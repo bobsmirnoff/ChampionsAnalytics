@@ -17,6 +17,7 @@ import com.bobsmirnov.championsanalytics.controller.ClubController;
 import com.bobsmirnov.championsanalytics.controller.ScoreBoardController;
 import com.bobsmirnov.championsanalytics.db.DBWorker;
 import com.bobsmirnov.championsanalytics.model.Club;
+import com.bobsmirnov.championsanalytics.model.ScoreState;
 import com.bobsmirnov.championsanalytics.model.formulas.KomarovoFormula;
 import com.bobsmirnov.championsanalytics.view.Listener;
 import com.bobsmirnov.championsanalytics.view.ScoreBoardPosition;
@@ -56,26 +57,24 @@ public class Main extends Activity {
 
         final ClubController[] clubControllers = new ClubController[]{
                 new ClubController(this,
-//                        (TextView) findViewById(R.id.name_team_left),
                         (ImageView) findViewById(R.id.logo_team_left),
                         (TableLayout) findViewById(R.id.table_left),
                         ScoreBoardPosition.LEFT),
                 new ClubController(this,
-//                        (TextView) findViewById(R.id.name_team_right),
                         (ImageView) findViewById(R.id.logo_team_right),
                         (TableLayout) findViewById(R.id.table_right),
                         ScoreBoardPosition.RIGHT)
         };
 
-//        findViewById(R.id.name_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
-        findViewById(R.id.logo_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
-//        findViewById(R.id.name_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
-        findViewById(R.id.logo_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
+        final ScoreState state = new ScoreState();
+        findViewById(R.id.logo_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0], state));
+        findViewById(R.id.logo_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1], state));
 
         for (ClubController viewer : clubControllers) {
             viewer.visualize(clubs.get(viewer.position));
-            scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
+            state.put(viewer.position, clubs.get(viewer.position));
         }
+        scoreBoardController.updateScore(state);
 
         Button newpair = (Button) findViewById(R.id.newpair);
         newpair.setOnClickListener(new View.OnClickListener() {
@@ -85,8 +84,9 @@ public class Main extends Activity {
                 clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH) + 1, getApplicationContext()));
                 for (ClubController viewer : clubControllers) {
                     viewer.visualize(clubs.get(viewer.position));
-                    scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
+                    state.put(viewer.position, clubs.get(viewer.position));
                 }
+                scoreBoardController.updateScore(state);
             }
         });
 
@@ -94,12 +94,7 @@ public class Main extends Activity {
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clubs.put(ScoreBoardPosition.LEFT, clubs.get(ScoreBoardPosition.LEFT));
-                clubs.put(ScoreBoardPosition.RIGHT, clubs.get(ScoreBoardPosition.RIGHT));
-                for (ClubController viewer : clubControllers) {
-                    viewer.visualize(clubs.get(viewer.position));
-                    scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
-                }
+                scoreBoardController.updateScore(state);
             }
         });
 

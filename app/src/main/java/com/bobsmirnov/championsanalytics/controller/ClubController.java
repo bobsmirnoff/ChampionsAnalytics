@@ -29,23 +29,19 @@ public class ClubController {
     private final TableRow.LayoutParams centeredHeaderParams =
             new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
     public Context context;
-    //    public TextView name;
     public ImageView img;
     public TableLayout table;
     public ScoreBoardPosition position;
 
     public ClubController(Context context, ImageView img, TableLayout table, ScoreBoardPosition position) {
         this.context = context;
-//        this.name = name;
         this.img = img;
         this.table = table;
         this.position = position;
     }
 
     public void visualize(Club club) {
-        final String name = club.getName();
-//        this.name.setText(name);
-        final String picTitle = name.toLowerCase().replace(" ", "_").replace("-", "_");
+        final String picTitle = club.getName().toLowerCase().replace(" ", "_").replace("-", "_");
         img.setImageResource(context.getResources().getIdentifier(picTitle, "drawable", context.getPackageName()));
 
         table.removeAllViews();

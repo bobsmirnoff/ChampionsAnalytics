@@ -2,7 +2,9 @@ package com.bobsmirnov.championsanalytics.model.formulas;
 
 import android.util.Pair;
 
+import com.bobsmirnov.championsanalytics.model.Club;
 import com.bobsmirnov.championsanalytics.model.ScoreState;
+import com.bobsmirnov.championsanalytics.model.competitions.Competition;
 import com.bobsmirnov.championsanalytics.view.ScoreBoardPosition;
 
 import java.util.Random;
@@ -24,8 +26,10 @@ public class KomarovoFormula implements ScoreFormula {
     @Override
     public Pair<Integer, Integer> getScore(ScoreState state) {
         log = "";
-        int score1 = state.get(ScoreBoardPosition.LEFT);
-        int score2 = state.get(ScoreBoardPosition.RIGHT);
+        final Club club1 = state.get(ScoreBoardPosition.LEFT);
+        final Club club2 = state.get(ScoreBoardPosition.RIGHT);
+        int score1 = getPoints(club1);
+        int score2 = getPoints(club2);
         log += "score1: " + score1 + " score2: " + score2 + "\n";
         double domination = (double) Math.max(score1, score2) / Math.min(score1, score2);
         log += "domination: " + domination + "\n";
@@ -58,6 +62,15 @@ public class KomarovoFormula implements ScoreFormula {
 
     private double asymptoteToMaxScore(double oldScore) {
         return round(MAX_SCORE / 2 * (cos(exp(1 - 0.1 * oldScore)) + 1));
+    }
+
+    private int getPoints(Club club) {
+        int score = club.getLegends().size();
+        for (Competition c : club.getTrophies().keySet()) {
+            if (club.getTrophies().get(c) > 0)
+                score += club.getTrophies().get(c);
+        }
+        return score;
     }
 
     @Override

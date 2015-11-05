@@ -22,7 +22,6 @@ public class Club {
     long id;
     private HashMap<Competition, Integer> trophies;
     private String name;
-    private String emblemPath;
     private String nation;
     private ArrayList<String> legends;
 
@@ -68,14 +67,6 @@ public class Club {
     public String getName() {
         if (name == null) System.err.println(id);
         return name;
-    }
-
-    public String getEmblemPath() {
-        return emblemPath;
-    }
-
-    public String getNation() {
-        return nation;
     }
 
     public ArrayList<String> getLegends() {
