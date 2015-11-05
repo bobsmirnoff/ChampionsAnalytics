@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bobsmirnov.championsanalytics.controller.ClubController;
 import com.bobsmirnov.championsanalytics.controller.ScoreBoardController;
@@ -46,8 +45,8 @@ public class Main extends Activity {
         final int CLUBS_LENGTH = db.getAllClubsNames().size() - 1;
         db.close();
 
-        clubs.put(ScoreBoardPosition.LEFT, new Club(r.nextInt(CLUBS_LENGTH), this));
-        clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH), this));
+        clubs.put(ScoreBoardPosition.LEFT, new Club(r.nextInt(CLUBS_LENGTH) + 1, this));
+        clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH) + 1, this));
 
         final ScoreBoardController scoreBoardController = new ScoreBoardController(this,
                 (TextView) findViewById(R.id.score_left),
@@ -57,20 +56,20 @@ public class Main extends Activity {
 
         final ClubController[] clubControllers = new ClubController[]{
                 new ClubController(this,
-                        (TextView) findViewById(R.id.name_team_left),
+//                        (TextView) findViewById(R.id.name_team_left),
                         (ImageView) findViewById(R.id.logo_team_left),
                         (TableLayout) findViewById(R.id.table_left),
                         ScoreBoardPosition.LEFT),
                 new ClubController(this,
-                        (TextView) findViewById(R.id.name_team_right),
+//                        (TextView) findViewById(R.id.name_team_right),
                         (ImageView) findViewById(R.id.logo_team_right),
                         (TableLayout) findViewById(R.id.table_right),
                         ScoreBoardPosition.RIGHT)
         };
 
-        findViewById(R.id.name_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
+//        findViewById(R.id.name_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
         findViewById(R.id.logo_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
-        findViewById(R.id.name_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
+//        findViewById(R.id.name_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
         findViewById(R.id.logo_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
 
         for (ClubController viewer : clubControllers) {
@@ -82,8 +81,8 @@ public class Main extends Activity {
         newpair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clubs.put(ScoreBoardPosition.LEFT, new Club(r.nextInt(CLUBS_LENGTH), getApplicationContext()));
-                clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH), getApplicationContext()));
+                clubs.put(ScoreBoardPosition.LEFT, new Club(r.nextInt(CLUBS_LENGTH) + 1, getApplicationContext()));
+                clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH) + 1, getApplicationContext()));
                 for (ClubController viewer : clubControllers) {
                     viewer.visualize(clubs.get(viewer.position));
                     scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
@@ -110,9 +109,6 @@ public class Main extends Activity {
             @Override
             public void onClick(View v) {
                 File image = saveScreenshot();
-                if (image == null)
-                    Toast.makeText(getApplicationContext(), "OLOLO", Toast.LENGTH_LONG).show();
-
                 Uri screenshotUri = Uri.fromFile(image);
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("image/png");

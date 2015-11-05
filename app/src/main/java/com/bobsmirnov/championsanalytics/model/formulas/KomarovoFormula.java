@@ -32,11 +32,11 @@ public class KomarovoFormula implements ScoreFormula {
         final Random random = new Random();
 
         double goals1 = random.nextDouble() * Math.pow(domination, DOMINATION_POWER);
-        double goals2 = random.nextDouble();
+        double goals2 = 0;
 
         log += "goals1: " + goals1 + " goals2: " + goals2 + "\n";
 
-        double scaleCoeff = SCALE_COEFF_NUMERATOR / (Math.log(score1 + score2) + 1);
+        double scaleCoeff = SCALE_COEFF_NUMERATOR / (Math.sqrt(score1 + score2) + 1);
         log += "scaleCoeff: " + scaleCoeff + "\n";
 
         goals1 += random.nextDouble() * scaleCoeff;
@@ -46,13 +46,13 @@ public class KomarovoFormula implements ScoreFormula {
 
         if (state.namesAreSame()) {
             final int draw = (short) round((goals1 + goals2) / 2);
-            return new Pair<Integer, Integer>(draw, draw);
+            return new Pair<>(draw, draw);
         }
 
         final Pair<Double, Double> p = score2 > score1 ? new Pair<>(goals2, goals1) : new Pair<>(goals1, goals2);
         final double homeAdvantage = score1 >= score2 ? Math.exp(-0.01 * (score1 - score2)) + 0.3 : 1.3;
         log += "home advantage = " + homeAdvantage;
-        return new Pair<Integer, Integer>((int) round(asymptoteToMaxScore(p.first * homeAdvantage)),
+        return new Pair<>((int) round(asymptoteToMaxScore(p.first * homeAdvantage)),
                 (int) round(asymptoteToMaxScore(p.second)));
     }
 

@@ -66,6 +66,7 @@ public class Club {
     }
 
     public String getName() {
+        if (name == null) System.err.println(id);
         return name;
     }
 
