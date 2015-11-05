@@ -10,7 +10,7 @@ import android.content.DialogInterface;
 import android.view.View;
 
 import com.bobsmirnov.championsanalytics.controller.ClubController;
-import com.bobsmirnov.championsanalytics.controller.ScoreController;
+import com.bobsmirnov.championsanalytics.controller.ScoreBoardController;
 import com.bobsmirnov.championsanalytics.db.DBWorker;
 import com.bobsmirnov.championsanalytics.model.Club;
 
@@ -20,12 +20,12 @@ import java.util.TreeMap;
 public class Listener implements View.OnClickListener {
 
     private Context context;
-    private ScoreController scoreController;
+    private ScoreBoardController scoreBoardController;
     private ClubController clubController;
 
-    public Listener(Context context, ScoreController scoreController, ClubController clubController) {
+    public Listener(Context context, ScoreBoardController scoreBoardController, ClubController clubController) {
         this.context = context;
-        this.scoreController = scoreController;
+        this.scoreBoardController = scoreBoardController;
         this.clubController = clubController;
     }
 
@@ -52,7 +52,7 @@ public class Listener implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 clubController.visualize(new Club(data.get(items[which]), context));
-                scoreController.updateScore(clubController.position, new Club(data.get(items[which]), context));
+                scoreBoardController.updateScore(clubController.position, new Club(data.get(items[which]), context));
             }
         });
         builder.show();

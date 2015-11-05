@@ -22,7 +22,7 @@ public class Club {
     long id;
     private HashMap<Competition, Integer> trophies;
     private String name;
-    //    private String emblemPath;
+    private String emblemPath;
     private String nation;
     private ArrayList<String> legends;
 
@@ -40,7 +40,6 @@ public class Club {
                 this.id = id;
                 this.nation = cursor.getString(cursor.getColumnIndex(DBHelper.CLUB_NATION));
                 this.name = cursor.getString(cursor.getColumnIndex(DBHelper.CLUB_NAME));
-//                this.emblemPath = cursor.getString(cursor.getColumnIndex(DBHelper.CLUB_EMBLEM_PATH));
 
                 trophies.put(new NationalLeague(db.getNationalCupName(nation)),
                         cursor.getInt(cursor.getColumnIndex(DBHelper.CLUB_NATIONAL_LEAGUES_COUNT)));
@@ -70,9 +69,9 @@ public class Club {
         return name;
     }
 
-//    public String getEmblemPath() {
-//        return emblemPath;
-//    }
+    public String getEmblemPath() {
+        return emblemPath;
+    }
 
     public String getNation() {
         return nation;

@@ -12,7 +12,7 @@ import com.bobsmirnov.championsanalytics.view.ScoreBoardPosition;
 /**
  * Created by bobsmirnov on 29.07.15.
  */
-public class ScoreController {
+public class ScoreBoardController {
     public Context context;
     public TextView log;
     private TextView leftScore;
@@ -20,12 +20,12 @@ public class ScoreController {
     private ScoreFormula formula;
     private ScoreState state;
 
-    public ScoreController(Context context, TextView leftScore, TextView rightScore, ScoreFormula formula) {
+    public ScoreBoardController(Context context, TextView leftScore, TextView rightScore, ScoreFormula formula) {
         this.context = context;
         this.leftScore = leftScore;
         this.rightScore = rightScore;
         this.formula = formula;
-        state = new ScoreState();
+        this.state = new ScoreState();
     }
 
     public void updateScore(ScoreBoardPosition position, Club club) {

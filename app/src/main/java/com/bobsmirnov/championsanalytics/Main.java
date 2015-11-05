@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -14,7 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bobsmirnov.championsanalytics.controller.ClubController;
-import com.bobsmirnov.championsanalytics.controller.ScoreController;
+import com.bobsmirnov.championsanalytics.controller.ScoreBoardController;
+import com.bobsmirnov.championsanalytics.db.DBWorker;
 import com.bobsmirnov.championsanalytics.model.Club;
 import com.bobsmirnov.championsanalytics.model.formulas.KomarovoFormula;
 import com.bobsmirnov.championsanalytics.view.Listener;
@@ -24,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
 
 public class Main extends Activity {
@@ -34,14 +37,23 @@ public class Main extends Activity {
         setContentView(R.layout.main);
 
         final HashMap<ScoreBoardPosition, Club> clubs = new HashMap<>();
-        clubs.put(ScoreBoardPosition.LEFT, new Club(12, this));        // TODO: Generate randomly
-        clubs.put(ScoreBoardPosition.RIGHT, new Club(21, this));
+        final Random r = new Random(System.currentTimeMillis());
+        final DBWorker db = new DBWorker(this);
+        try {
+            db.open();
+        } catch (IOException e) {
+        }
+        final int CLUBS_LENGTH = db.getAllClubsNames().size() - 1;
+        db.close();
 
-        final ScoreController scoreController = new ScoreController(this,
+        clubs.put(ScoreBoardPosition.LEFT, new Club(r.nextInt(CLUBS_LENGTH), this));
+        clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH), this));
+
+        final ScoreBoardController scoreBoardController = new ScoreBoardController(this,
                 (TextView) findViewById(R.id.score_left),
                 (TextView) findViewById(R.id.score_right),
                 new KomarovoFormula());
-        scoreController.log = (TextView) findViewById(R.id.textView4);
+        scoreBoardController.log = (TextView) findViewById(R.id.textView4);
 
         final ClubController[] clubControllers = new ClubController[]{
                 new ClubController(this,
@@ -56,15 +68,42 @@ public class Main extends Activity {
                         ScoreBoardPosition.RIGHT)
         };
 
-        findViewById(R.id.name_team_left).setOnClickListener(new Listener(this, scoreController, clubControllers[0]));
-        findViewById(R.id.logo_team_left).setOnClickListener(new Listener(this, scoreController, clubControllers[0]));
-        findViewById(R.id.name_team_right).setOnClickListener(new Listener(this, scoreController, clubControllers[1]));
-        findViewById(R.id.logo_team_right).setOnClickListener(new Listener(this, scoreController, clubControllers[1]));
+        findViewById(R.id.name_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
+        findViewById(R.id.logo_team_left).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[0]));
+        findViewById(R.id.name_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
+        findViewById(R.id.logo_team_right).setOnClickListener(new Listener(this, scoreBoardController, clubControllers[1]));
 
         for (ClubController viewer : clubControllers) {
             viewer.visualize(clubs.get(viewer.position));
-            scoreController.updateScore(viewer.position, clubs.get(viewer.position));
+            scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
         }
+
+        Button newpair = (Button) findViewById(R.id.newpair);
+        newpair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clubs.put(ScoreBoardPosition.LEFT, new Club(r.nextInt(CLUBS_LENGTH), getApplicationContext()));
+                clubs.put(ScoreBoardPosition.RIGHT, new Club(r.nextInt(CLUBS_LENGTH), getApplicationContext()));
+                for (ClubController viewer : clubControllers) {
+                    viewer.visualize(clubs.get(viewer.position));
+                    scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
+                }
+            }
+        });
+
+        Button retry = (Button) findViewById(R.id.retry);
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clubs.put(ScoreBoardPosition.LEFT, clubs.get(ScoreBoardPosition.LEFT));
+                clubs.put(ScoreBoardPosition.RIGHT, clubs.get(ScoreBoardPosition.RIGHT));
+                for (ClubController viewer : clubControllers) {
+                    viewer.visualize(clubs.get(viewer.position));
+                    scoreBoardController.updateScore(viewer.position, clubs.get(viewer.position));
+                }
+            }
+        });
+
 
         ImageButton fab = (ImageButton) findViewById(R.id.fabButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +120,6 @@ public class Main extends Activity {
                 startActivity(Intent.createChooser(intent, "Share"));
             }
         });
-
     }
 
     public File saveScreenshot() {

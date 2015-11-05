@@ -43,8 +43,10 @@ public class ClubController {
     }
 
     public void visualize(Club club) {
-        name.setText(club.getName());
-        img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_launcher));
+        final String name = club.getName();
+        this.name.setText(name);
+        final String picTitle = name.toLowerCase().replace(" ", "_");
+        img.setImageResource(context.getResources().getIdentifier(picTitle, "drawable", context.getPackageName()));
 
         table.removeAllViews();
         drawHeaderRow("Trophies");
@@ -55,7 +57,6 @@ public class ClubController {
 
     private void drawTrophyRows(HashMap<Competition, Integer> trophies) {
         int i = 1;
-
         int j = 0;
         int priorities[] = new int[trophies.size()];
         for (final Competition cup : trophies.keySet()) {
@@ -71,7 +72,7 @@ public class ClubController {
             }
         }
 
-        for (Competition cup : orderedCups) {
+        for (final Competition cup : orderedCups) {
             ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.trophey_row, table);
             ((TextView) ((TableRow) table.getChildAt(i)).getChildAt(0)).setText(cup.viewName);
             ((TextView) ((TableRow) table.getChildAt(i++)).getChildAt(1)).setText(trophies.get(cup) + "");

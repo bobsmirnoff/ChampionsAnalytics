@@ -33,7 +33,7 @@ public class ScoreState {
         state.put(position, new Pair<>(club.getName(), score));
     }
 
-    public int get(ScoreBoardPosition position) {
+    public Integer get(ScoreBoardPosition position) {
         return state.get(position).second;
     }
 }
