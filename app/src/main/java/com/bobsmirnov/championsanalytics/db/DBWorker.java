@@ -57,22 +57,6 @@ public class DBWorker {
                 null, null, null);
     }
 
-    public int getNationalCups(long clubId) {
-        return getCups(clubId, DBHelper.CLUB_NATIONAL_LEAGUES_COUNT);
-    }
-
-    public int getChampionsLeagueCups(long clubId) {
-        return getCups(clubId, DBHelper.CLUB_CHAMPIONS_LEAGUE_CUPS_COUNT);
-    }
-
-    public int getUEFACups(long clubId) {
-        return getCups(clubId, DBHelper.CLUB_UEFA_CUPS_COUNT);
-    }
-
-    public int getSupercopaCups(long clubId) {
-        return getCups(clubId, DBHelper.CLUB_SUPERCOPA_CUPS_COUNT);
-    }
-
     private int getCups(long clubId, String competitionColumn) {
         int count = -1;
         final Cursor cursor = db.query(DBHelper.CLUBS_TABLE,

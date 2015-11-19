@@ -26,7 +26,7 @@ public class ScoreBoardController {
 
     public void updateScore(ScoreState state) {
         final Pair<Integer, Integer> formulaResult = formula.getScore(state);
-        log.setText(formula.getLog());
+//        log.setText(formula.getLog());
         leftScore.setText("" + formulaResult.first);
         rightScore.setText("" + formulaResult.second);
     }

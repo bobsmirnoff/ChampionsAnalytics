@@ -10,13 +10,18 @@ import java.util.HashMap;
 public class ScoreState {
     private HashMap<ScoreBoardPosition, Club> state;
 
-    public ScoreState() {
+    public ScoreState(Club left, Club right) {
         this.state = new HashMap<>();
+        put(ScoreBoardPosition.LEFT, left);
+        put(ScoreBoardPosition.RIGHT, right);
     }
 
-    public boolean namesAreSame() {
-        return state.get(ScoreBoardPosition.LEFT).getName()
-                .equals(state.get(ScoreBoardPosition.RIGHT).getName());
+    public ScoreState(HashMap<ScoreBoardPosition, Club> map) {
+        this.state = map;
+    }
+
+    public Club getOtherPositionClub(ScoreBoardPosition pos) {
+        return pos.equals(ScoreBoardPosition.LEFT) ? state.get(ScoreBoardPosition.RIGHT) : state.get(ScoreBoardPosition.LEFT);
     }
 
     public void put(ScoreBoardPosition position, Club club) {
@@ -25,5 +30,11 @@ public class ScoreState {
 
     public Club get(ScoreBoardPosition position) {
         return state.get(position);
+    }
+
+    public void swap() {
+        final Club left = get(ScoreBoardPosition.LEFT);
+        put(ScoreBoardPosition.LEFT, get(ScoreBoardPosition.RIGHT));
+        put(ScoreBoardPosition.RIGHT, left);
     }
 }

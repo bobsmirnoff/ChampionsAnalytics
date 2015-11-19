@@ -3,5 +3,15 @@
 
     <string name="app_name">Champions Analytics</string>
     <string name="action_settings">Settings</string>
+    <string name="home_team">home</string>
+    <string name="away_team">away</string>
+
+    <string name="blue">away</string>
+    <string name="light_blue">away</string>
+    <string name="green">away</string>
+    <string name="red">away</string>
+    <string name="white">away</string>
+    <string name="yellow">away</string>
+    <string name="black">away</string>
 
 </resources>

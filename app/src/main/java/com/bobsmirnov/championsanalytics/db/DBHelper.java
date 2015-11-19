@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CLUB_ID = "_id";
     public static final String CLUB_NAME = "name";
     public static final String CLUB_NATION = "nation";
-    public static final String CLUB_EMBLEM_PATH = "image_path";
+    public static final String CLUB_COLORS = "colors";
     public static final String CLUB_NATIONAL_LEAGUES_COUNT = "national_count";
     public static final String CLUB_CHAMPIONS_LEAGUE_CUPS_COUNT = "cl_count";
     public static final String CLUB_UEFA_CUPS_COUNT = "uefa_count";
@@ -36,7 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + CLUB_CHAMPIONS_LEAGUE_CUPS_COUNT + " integer, "
                     + CLUB_UEFA_CUPS_COUNT + " integer, "
                     + CLUB_SUPERCOPA_CUPS_COUNT + " integer, "
-                    + CLUB_EMBLEM_PATH + " text"
+                    + CLUB_COLORS + " text"
                     + ");";
     // legends table
     public static final String LEGENDS_TABLE = "legends_table";

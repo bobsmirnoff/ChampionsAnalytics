@@ -41,17 +41,12 @@ public class KomarovoFormula implements ScoreFormula {
         log += "goals1: " + goals1 + " goals2: " + goals2 + "\n";
 
         double scaleCoeff = SCALE_COEFF_NUMERATOR / (Math.sqrt(score1 + score2) + 1);
-        log += "scaleCoeff: " + scaleCoeff + "\n";
+        log += "scale coeff: " + scaleCoeff + "\n";
 
         goals1 += random.nextDouble() * scaleCoeff;
         goals2 += random.nextDouble() * scaleCoeff;
 
         log += "goals1: " + goals1 + " goals2: " + goals2 + "\n";
-
-        if (state.namesAreSame()) {
-            final int draw = (short) round((goals1 + goals2) / 2);
-            return new Pair<>(draw, draw);
-        }
 
         final Pair<Double, Double> p = score2 > score1 ? new Pair<>(goals2, goals1) : new Pair<>(goals1, goals2);
         final double homeAdvantage = score1 >= score2 ? Math.exp(-0.01 * (score1 - score2)) + 0.3 : 1.3;
